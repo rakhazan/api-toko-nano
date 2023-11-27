@@ -22,7 +22,7 @@ export const getAll = async (req, res) => {
             data: data,
         })
     } catch (error) {
-        res.json({
+        res.status(500).json({
             message: 'Server Error',
             errorMessage: error,
         })
@@ -40,6 +40,25 @@ export const getDetail = async (req, res) => {
             data: data,
         })
     } catch (error) {
+        res.status(500).json({
+            message: 'Server Error',
+            errorMessage: error,
+        })
+    }
+}
 
+export const getCategories = async (req, res) => {
+    try {
+        const [data] = await Model.categories()
+
+        res.json({
+            message: 'Get all categories',
+            data: data,
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Server Error',
+            errorMessage: error,
+        })
     }
 }

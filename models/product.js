@@ -13,3 +13,8 @@ export const find = async (id) => {
     const [result] = await db.execute(sql, [id])
     return result || null
 }
+
+export const categories = () => {
+    const sql = `SELECT * FROM categories WHERE is_deleted = 0`
+    return db.execute(sql)
+}
