@@ -3,9 +3,7 @@ import * as Controller from '../controllers/product.js'
 
 const router = express.Router()
 
-router.put('/:id', Controller.update)
-router.delete('/:id', Controller.destroy)
-router.post('/', Controller.create)
 router.get('/', Controller.getAll)
+router.get('/detail/:id', Controller.getDetail)
 
 export default router

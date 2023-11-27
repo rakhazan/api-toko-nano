@@ -2,7 +2,20 @@ import * as Model from '../models/product.js'
 
 export const getAll = async (req, res) => {
     try {
-        const [data] = Model.getAll()
+        const filters = Object.entries(req.query).map(([key, value]) => {
+            switch (key) {
+                case 'name':
+                    return `${key} LIKE '%${value}%'`
+                case 'min':
+                    return `price >= ${value}`
+                case 'max':
+                    return `price <= ${value}`
+                case 'category_id':
+                    return `${key}=${value}`
+            }
+        })
+
+        const [data] = await Model.get(filters)
 
         res.json({
             message: 'Get all products',
@@ -16,20 +29,17 @@ export const getAll = async (req, res) => {
     }
 }
 
-export const create = (req, res) => {
-    res.json({
-        message: 'Create new product'
-    })
-}
+export const getDetail = async (req, res) => {
+    try {
+        const { id } = req.params
 
-export const update = (req, res) => {
-    res.json({
-        message: 'Update product'
-    })
-}
+        const [data] = await Model.find(id)
 
-export const destroy = (req, res) => {
-    res.json({
-        message: 'Delete product'
-    })
+        res.json({
+            message: 'Get detail product',
+            data: data,
+        })
+    } catch (error) {
+
+    }
 }
