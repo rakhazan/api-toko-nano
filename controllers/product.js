@@ -1,6 +1,6 @@
 import * as Model from '../models/product.js'
 
-export const getAll = async (req, res) => {
+export const getData = async (req, res) => {
     try {
         const filters = Object.entries(req.query).map(([key, value]) => {
             switch (key) {
