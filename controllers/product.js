@@ -62,3 +62,44 @@ export const getCategories = async (req, res) => {
         })
     }
 }
+
+export const getWishlists = async (req, res) => {
+    try {
+        const [data] = await Model.wishlists()
+
+        res.json({
+            message: 'Get all wishlists',
+            data: data
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Server Error',
+            errorMessage: error,
+        })
+    }
+}
+
+export const toggleWishlist = async (req, res) => {
+    const { customer_id, product_id } = req.body
+    let message = ''
+
+    try {
+        const check = await Model.wishlistCheck(product_id, customer_id)
+        if (check) {
+            await Model.wishlistRemove(product_id, customer_id)
+            message = 'Product removed from wishlist'
+        } else {
+            await Model.wishlistAdd(product_id, customer_id)
+            message = 'Product added from wishlist'
+        }
+
+        res.json({
+            message: message
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Server Error',
+            errorMessage: error,
+        })
+    }
+}
