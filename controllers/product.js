@@ -18,11 +18,13 @@ export const getData = async (req, res) => {
         const [data] = await Model.get(filters)
 
         res.json({
+            status: 'success',
             message: 'Get all products',
             data: data,
         })
     } catch (error) {
         res.status(500).json({
+            status: 'error',
             message: 'Server Error',
             errorMessage: error,
         })
@@ -36,11 +38,13 @@ export const getDetail = async (req, res) => {
         const [data] = await Model.find(id)
 
         res.json({
+            status: 'success',
             message: 'Get detail product',
             data: data,
         })
     } catch (error) {
         res.status(500).json({
+            status: 'error',
             message: 'Server Error',
             errorMessage: error,
         })
@@ -52,11 +56,13 @@ export const getCategories = async (req, res) => {
         const [data] = await Model.categories()
 
         res.json({
+            status: 'success',
             message: 'Get all categories',
             data: data,
         })
     } catch (error) {
         res.status(500).json({
+            status: 'error',
             message: 'Server Error',
             errorMessage: error,
         })
@@ -68,11 +74,13 @@ export const getWishlists = async (req, res) => {
         const [data] = await Model.wishlists()
 
         res.json({
+            status: 'success',
             message: 'Get all wishlists',
             data: data
         })
     } catch (error) {
         res.status(500).json({
+            status: 'error',
             message: 'Server Error',
             errorMessage: error,
         })
@@ -94,10 +102,12 @@ export const toggleWishlist = async (req, res) => {
         }
 
         res.json({
+            status: 'success',
             message: message
         })
     } catch (error) {
         res.status(500).json({
+            status: 'error',
             message: 'Server Error',
             errorMessage: error,
         })
