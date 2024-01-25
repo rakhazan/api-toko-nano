@@ -17,13 +17,13 @@ export const getData = async (req, res) => {
 
         const [data] = await Model.get(filters)
 
-        res.json({
+        return res.json({
             status: 'success',
             message: 'Get all products',
             data: data,
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             message: 'Server Error',
             errorMessage: error,
@@ -35,15 +35,22 @@ export const getDetail = async (req, res) => {
     try {
         const { id } = req.params
 
-        const [data] = await Model.find(id)
+        const data = await Model.find(id)
 
-        res.json({
+        if (!data) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Product not found'
+            })
+        }
+
+        return res.json({
             status: 'success',
             message: 'Get detail product',
             data: data,
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             message: 'Server Error',
             errorMessage: error,
@@ -55,13 +62,13 @@ export const getCategories = async (req, res) => {
     try {
         const [data] = await Model.categories()
 
-        res.json({
+        return res.json({
             status: 'success',
             message: 'Get all categories',
             data: data,
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             message: 'Server Error',
             errorMessage: error,
@@ -73,13 +80,13 @@ export const getWishlists = async (req, res) => {
     try {
         const [data] = await Model.wishlists()
 
-        res.json({
+        return res.json({
             status: 'success',
             message: 'Get all wishlists',
             data: data
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             message: 'Server Error',
             errorMessage: error,
@@ -101,12 +108,12 @@ export const toggleWishlist = async (req, res) => {
             message = 'Product added from wishlist'
         }
 
-        res.json({
+        return res.json({
             status: 'success',
             message: message
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             message: 'Server Error',
             errorMessage: error,

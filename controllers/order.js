@@ -3,12 +3,14 @@ import * as Model from '../models/order.js'
 export const getData = async (req, res) => {
     try {
         const [data] = await Model.get()
-        res.json({
+        return res.json({
+            status: 'success',
             message: 'Get all orders',
             data: data
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
+            status: 'error',
             message: 'Server error',
             errorMessage: error
         })
@@ -16,21 +18,23 @@ export const getData = async (req, res) => {
 }
 
 export const create = async (req, res) => {
+    const { customer_id, products } = req.body
     try {
-        const create = await Model.insert(req.customer_id, req.products)
+        const create = await Model.insert(customer_id, products)
         if (create) {
-            res.json({
+            return res.json({
                 status: 'success',
                 message: 'Ordered succesfully'
             })
         } else {
-            res.status(400).json({
+            return res.status(400).json({
                 status: 'error',
                 message: 'Order failed'
             })
         }
     } catch (error) {
-        res.status(500).json({
+        console.log(error)
+        return res.status(500).json({
             status: 'error',
             message: 'Error processing request',
             errorMessage: error,

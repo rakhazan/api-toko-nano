@@ -4,5 +4,6 @@ import * as Controller from '../controllers/order.js'
 const router = express.Router()
 
 router.get('/', Controller.getData)
+router.post('/', Controller.create)
 
 export default router

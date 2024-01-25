@@ -8,7 +8,7 @@ export const get = () => {
 export const find = async (id) => {
     const sql = `SELECT * FROM customers WHERE is_deleted = 0 AND id = ${id} LIMIT 1`
     const [result] = await db.execute(sql)
-    return result || null
+    return result.length > 0 ? result[0] : null
 }
 
 export const update = (id, data) => {

@@ -4,12 +4,14 @@ export const getData = async (req, res) => {
     try {
         const [data] = await Model.get()
 
-        res.json({
+        return res.json({
+            status: 'success',
             message: 'Get data customers',
             data: data
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
+            status: 'error',
             message: 'Server Error',
             errorMessage: error,
         })
@@ -20,14 +22,23 @@ export const getDetail = async (req, res) => {
     const { id } = req.params
 
     try {
-        const [data] = await Model.find(id)
+        const data = await Model.find(id)
 
-        res.json({
+        if (!data) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Customer not found'
+            })
+        }
+
+        return res.json({
+            status: 'success',
             message: `Get detail customer`,
             data: data
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
+            status: 'error',
             message: 'Server Error',
             errorMessage: error,
         })
@@ -41,12 +52,14 @@ export const update = async (req, res) => {
     try {
         await Model.update(id, body)
 
-        res.json({
+        return res.json({
+            status: 'success',
             message: 'Customer updated successfully',
             data: { id: id, ...body }
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
+            status: 'error',
             message: 'Server Error',
             errorMessage: error,
         })
