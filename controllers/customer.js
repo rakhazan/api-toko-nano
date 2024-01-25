@@ -47,10 +47,9 @@ export const getDetail = async (req, res) => {
 
 export const update = async (req, res) => {
     const { id } = req.params
-    const { body } = req
 
     try {
-        await Model.update(id, body)
+        await Model.update(id, req.body)
 
         return res.json({
             status: 'success',

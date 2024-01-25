@@ -41,3 +41,21 @@ export const create = async (req, res) => {
         })
     }
 }
+
+export const update = async (req, res) => {
+    const { order_id, ...data } = req.body
+    try {
+        await Model.update(order_id, data)
+
+        return res.json({
+            status: 'success',
+            message: 'Order updated successfully'
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: 'Server Error',
+            errorMessage: error,
+        })
+    }
+}

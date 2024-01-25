@@ -1,6 +1,5 @@
 import db from '../config/database.js'
 
-
 export const get = () => {
     const sql = `SELECT * FROM orders WHERE is_deleted=0`
     return db.execute(sql)
@@ -22,8 +21,7 @@ export const insert = async (customer_id, products = []) => {
             await conn.execute(createDetailOrderSQL, [insertedId, product.id, product.price, product.quantity])
         }
 
-        await conn.commit()
-        return true
+        return await conn.commit()
     } catch (error) {
         await conn.rollback()
         console.log('error: ' + error)
@@ -31,4 +29,13 @@ export const insert = async (customer_id, products = []) => {
     } finally {
         db.releaseConnection()
     }
+}
+
+export const update = (order_id, data) => {
+    const date = new Date()
+    const setData = Object.keys(data).map(key => `${key}='${data[key]}'`).join(', ')
+    console.log(setData)
+
+    const sql = `Update orders SET ${setData}, updated_at=? WHERE id=?`;
+    return db.execute(sql, [date, order_id])
 }
