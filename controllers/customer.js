@@ -64,3 +64,53 @@ export const update = async (req, res) => {
         })
     }
 }
+
+export const login = async (req, res) => {
+    const { email, password } = req.body
+
+    try {
+        const data = await Model.login(email, password)
+        if (!data) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Email or Password is wrong'
+            })
+        }
+
+        return res.json({
+            status: 'success',
+            message: `Login success`,
+            data: data
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: 'Server Error',
+            errorMessage: error,
+        })
+    }
+}
+
+export const regis = async (req, res) => {
+    try {
+        const reg = await Model.register(req.body)
+        if (reg) {
+            return res.json({
+                status: 'success',
+                message: 'Registration succesfully'
+            })
+        } else {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Registration failed'
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            status: 'error',
+            message: 'Error processing request',
+            errorMessage: error,
+        })
+    }
+}
