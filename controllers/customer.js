@@ -93,6 +93,14 @@ export const login = async (req, res) => {
 
 export const regis = async (req, res) => {
     try {
+        const check = await Model.checkUniqueEmail(req.body.email)
+        if (!check) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Email already used. Please enter another email'
+            })
+        }
+
         const reg = await Model.register(req.body)
         if (reg) {
             return res.json({

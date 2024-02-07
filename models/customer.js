@@ -28,3 +28,9 @@ export const register = (data) => {
     const sql = `INSERT INTO customers (fullname, username, email, password) VALUES (?,?,?,?)`
     return db.execute(sql, [data.fullname, data.username, data.email, data.password])
 }
+
+export const checkUniqueEmail = async (email) => {
+    const sql = `SELECT * FROM customers WHERE email=? LIMIT 1`
+    const [result] = await db.execute(sql, [email])
+    return result.length > 0
+}
