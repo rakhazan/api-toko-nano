@@ -1,18 +1,25 @@
 import db from '../config/database.js'
 
 export const get = () => {
-    const sql = `SELECT * FROM orders WHERE is_deleted=0`
+    const sql = `SELECT o.*, c.fullname, c.email, c.phone FROM orders o
+    LEFT JOIN customers c ON o.customer_id=c.id
+    WHERE o.is_deleted=0`
     return db.execute(sql)
 }
 
-export const insert = async (customer_id, products = []) => {
+export const getOrderDetails = (order_id) => {
+    const sql = `SELECT * FROM orders_detail WHERE order_id=?`
+    return db.execute(sql, [order_id])
+}
+
+export const insert = async (customer_id, address, products = []) => {
     const date = new Date()
     const conn = await db.getConnection()
     try {
         await conn.beginTransaction()
 
-        const createOrderSQL = `INSERT INTO orders (customer_id, date) VALUES (?, ?)`
-        const [orderResult] = await conn.execute(createOrderSQL, [customer_id, date])
+        const createOrderSQL = `INSERT INTO orders (customer_id, date, address) VALUES (?, ?, ?)`
+        const [orderResult] = await conn.execute(createOrderSQL, [customer_id, date, address])
         const insertedId = orderResult.insertId
         console.log(insertedId)
 

@@ -2,7 +2,12 @@ import * as Model from '../models/order.js'
 
 export const getData = async (req, res) => {
     try {
-        const [data] = await Model.get()
+        let [data] = await Model.get()
+        for (let order of data) {
+            const [data] = await Model.getOrderDetails(order.id)
+            order.details = data
+        }
+
         return res.json({
             status: 'success',
             message: 'Get all orders',
