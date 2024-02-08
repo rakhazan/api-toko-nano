@@ -21,7 +21,6 @@ export const insert = async (customer_id, address, products = []) => {
         const createOrderSQL = `INSERT INTO orders (customer_id, date, address) VALUES (?, ?, ?)`
         const [orderResult] = await conn.execute(createOrderSQL, [customer_id, date, address])
         const insertedId = orderResult.insertId
-        console.log(insertedId)
 
         const createDetailOrderSQL = `INSERT INTO orders_detail (order_id, product_id, buying_price, quantity) VALUES (?,?,?,?)`
         for (const product of products) {
@@ -31,7 +30,6 @@ export const insert = async (customer_id, address, products = []) => {
         return await conn.commit()
     } catch (error) {
         await conn.rollback()
-        console.log('error: ' + error)
         throw error
     } finally {
         db.releaseConnection()

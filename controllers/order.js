@@ -23,9 +23,9 @@ export const getData = async (req, res) => {
 }
 
 export const create = async (req, res) => {
-    const { customer_id, products } = req.body
+    const { customer_id, address, products } = req.body
     try {
-        const create = await Model.insert(customer_id, products)
+        const create = await Model.insert(customer_id, address, products)
         if (create) {
             return res.json({
                 status: 'success',
@@ -38,7 +38,6 @@ export const create = async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
             status: 'error',
             message: 'Error processing request',
