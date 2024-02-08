@@ -8,18 +8,20 @@ export const get = () => {
 }
 
 export const getOrderDetails = (order_id) => {
-    const sql = `SELECT * FROM orders_detail WHERE order_id=?`
+    const sql = `SELECT o.*, p.image, p.name, p.description FROM orders_detail o
+    LEFT JOIN products p ON o.product_id=p.id
+    WHERE order_id=?`
     return db.execute(sql, [order_id])
 }
 
-export const insert = async (customer_id, address, products = []) => {
+export const insert = async (customer_id, address, total, products = []) => {
     const date = new Date()
     const conn = await db.getConnection()
     try {
         await conn.beginTransaction()
 
-        const createOrderSQL = `INSERT INTO orders (customer_id, date, address) VALUES (?, ?, ?)`
-        const [orderResult] = await conn.execute(createOrderSQL, [customer_id, date, address])
+        const createOrderSQL = `INSERT INTO orders (customer_id, date, address, total) VALUES (?, ?, ?, ?)`
+        const [orderResult] = await conn.execute(createOrderSQL, [customer_id, date, address, total])
         const insertedId = orderResult.insertId
 
         const createDetailOrderSQL = `INSERT INTO orders_detail (order_id, product_id, buying_price, quantity) VALUES (?,?,?,?)`

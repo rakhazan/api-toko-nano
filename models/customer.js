@@ -25,8 +25,8 @@ export const login = async (email, pass) => {
 }
 
 export const register = (data) => {
-    const sql = `INSERT INTO customers (fullname, username, email, password) VALUES (?,?,?,?)`
-    return db.execute(sql, [data.fullname, data.username, data.email, data.password])
+    const sql = `INSERT INTO customers (fullname, username, email, phone, password) VALUES (?,?,?,?,?)`
+    return db.execute(sql, [data.fullname, data.username, data.email, data.phone, data.password])
 }
 
 export const checkUniqueEmail = async (email) => {

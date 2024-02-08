@@ -23,9 +23,9 @@ export const getData = async (req, res) => {
 }
 
 export const create = async (req, res) => {
-    const { customer_id, address, products } = req.body
+    const { customer_id, address, total, products } = req.body
     try {
-        const create = await Model.insert(customer_id, address, products)
+        const create = await Model.insert(customer_id, address, total, products)
         if (create) {
             return res.json({
                 status: 'success',
