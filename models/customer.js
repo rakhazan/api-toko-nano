@@ -12,10 +12,10 @@ export const find = async (id) => {
 }
 
 export const update = (id, data) => {
-    const date = new Date()
-    const setData = Object.keys(data).map(key => `${key} = ${data[key]}`).join(', ')
-    const sql = `UPDATE customers SET ${setData}, updated_at=${date} WHERE id = ${id}`
-    return db.execute(sql)
+    const setData = Object.keys(data).map(key => `${key}=?`).join(', ')
+    const values = [...Object.values(data), id]
+    const sql = `UPDATE customers SET ${setData}, updated_at=NOW() WHERE id=?`
+    return db.execute(sql, values)
 }
 
 export const login = async (email, pass) => {

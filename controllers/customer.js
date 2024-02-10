@@ -54,7 +54,7 @@ export const update = async (req, res) => {
         return res.json({
             status: 'success',
             message: 'Customer updated successfully',
-            data: { id: id, ...body }
+            data: { id: id, ...req.body }
         })
     } catch (error) {
         return res.status(500).json({
