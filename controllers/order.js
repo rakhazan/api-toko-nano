@@ -29,7 +29,10 @@ export const create = async (req, res) => {
         if (create) {
             return res.json({
                 status: 'success',
-                message: 'Ordered succesfully'
+                message: 'Ordered succesfully',
+                data: {
+                    orderId: create
+                }
             })
         } else {
             return res.status(400).json({

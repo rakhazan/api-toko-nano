@@ -33,7 +33,9 @@ export const insert = async (customer_id, address, total, products = []) => {
         const createTransactionSQL = `INSERT INTO transactions (order_id) VALUES (?)`
         await conn.execute(createTransactionSQL, [insertedId])
 
-        return await conn.commit()
+        await conn.commit()
+
+        return insertedId
     } catch (error) {
         await conn.rollback()
         throw error
