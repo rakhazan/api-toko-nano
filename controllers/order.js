@@ -63,3 +63,21 @@ export const update = async (req, res) => {
         })
     }
 }
+
+export const confirmPayment = async (req, res) => {
+    const { orderId } = req.params
+    try {
+        await Model.confirmPayment(orderId)
+
+        return res.json({
+            status: 'success',
+            message: 'Payment confirmed'
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: 'Server Error',
+            errorMessage: error,
+        })
+    }
+}

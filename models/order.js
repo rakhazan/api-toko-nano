@@ -1,8 +1,9 @@
 import db from '../config/database.js'
 
 export const get = () => {
-    const sql = `SELECT o.*, c.fullname, c.email, c.phone FROM orders o
+    const sql = `SELECT o.*, c.fullname, c.email, c.phone, t.payment_status FROM orders o
     LEFT JOIN customers c ON o.customer_id=c.id
+    LEFT JOIN transactions t ON o.id=t.order_id
     WHERE o.is_deleted=0`
     return db.execute(sql)
 }
@@ -29,6 +30,9 @@ export const insert = async (customer_id, address, total, products = []) => {
             await conn.execute(createDetailOrderSQL, [insertedId, product.id, product.price, product.quantity])
         }
 
+        const createTransactionSQL = `INSERT INTO transactions (order_id) VALUES (?)`
+        await conn.execute(createTransactionSQL, [insertedId])
+
         return await conn.commit()
     } catch (error) {
         await conn.rollback()
@@ -41,8 +45,12 @@ export const insert = async (customer_id, address, total, products = []) => {
 export const update = (order_id, data) => {
     const date = new Date()
     const setData = Object.keys(data).map(key => `${key}='${data[key]}'`).join(', ')
-    console.log(setData)
 
     const sql = `Update orders SET ${setData}, updated_at=? WHERE id=?`;
     return db.execute(sql, [date, order_id])
+}
+
+export const confirmPayment = (order_id) => {
+    const sql = `UPDATE transactions SET date=NOW(), payment_method='Bank Transfer', payment_status=1, updated_at=NOW() WHERE order_id=?`
+    return db.execute(sql, [order_id])
 }
