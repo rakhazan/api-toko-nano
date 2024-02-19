@@ -54,6 +54,12 @@ export const update = async (req, res) => {
     try {
         await Model.update(order_id, data)
 
+        if (data.status === 'Dibatalkan') {
+            for (let product of data.products) {
+                await Model.addStock(product.id, product.quantity)
+            }
+        }
+
         return res.json({
             status: 'success',
             message: 'Order updated successfully'

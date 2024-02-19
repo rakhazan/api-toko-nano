@@ -4,7 +4,8 @@ export const get = () => {
     const sql = `SELECT o.*, c.fullname, c.email, c.phone, t.payment_status FROM orders o
     LEFT JOIN customers c ON o.customer_id=c.id
     LEFT JOIN transactions t ON o.id=t.order_id
-    WHERE o.is_deleted=0`
+    WHERE o.is_deleted=0
+    ORDER BY o.created_at DESC`
     return db.execute(sql)
 }
 
@@ -26,8 +27,10 @@ export const insert = async (customer_id, address, total, products = []) => {
         const insertedId = orderResult.insertId
 
         const createDetailOrderSQL = `INSERT INTO orders_detail (order_id, product_id, buying_price, quantity) VALUES (?,?,?,?)`
+        const minStockSQL = `UPDATE products SET stock=stock-?, updated_at=NOW() WHERE id=?`
         for (const product of products) {
             await conn.execute(createDetailOrderSQL, [insertedId, product.id, product.price, product.quantity])
+            await conn.execute(minStockSQL, [product.quantity, product.id])
         }
 
         const createTransactionSQL = `INSERT INTO transactions (order_id) VALUES (?)`
@@ -55,4 +58,9 @@ export const update = (order_id, data) => {
 export const confirmPayment = (order_id) => {
     const sql = `UPDATE transactions SET date=NOW(), payment_method='Bank Transfer', payment_status=1, updated_at=NOW() WHERE order_id=?`
     return db.execute(sql, [order_id])
+}
+
+export const addStock = (product_id, quantity) => {
+    const sql = `UPDATE products SET stock=stock+?, updated_at=NOW() WHERE id=?`
+    return db.execute(sql, [quantity, product_id])
 }
